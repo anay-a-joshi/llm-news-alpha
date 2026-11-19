@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slides | LLM News Alpha | Group 5 | MGT 6078</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060b;--bg-2:#0a0d17;--card:#0e1220;--line:#1c2336;--text:#eef2ff;--muted:#8d97b5;
+  --cyan:#00f0ff;--green:#00ff88;--pink:#ff2e88;--violet:#a855ff;--amber:#ffc83d;
+  --display:"Sora",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#020308;color:var(--text);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* So, every slide is drawn on a fixed 1600 x 900 stage, then scaled to fit any screen */
+.viewport{position:fixed;inset:0;overflow:hidden}
+.stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s;
+  background:
+    radial-gradient(900px 520px at 88% -8%, rgba(168,85,255,.20), transparent 60%),
+    radial-gradient(760px 520px at -8% 105%, rgba(0,240,255,.12), transparent 60%),
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px) 0 0/100% 60px,
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px) 0 0/60px 100%,
+    var(--bg);}
+.slide.active{opacity:1;visibility:visible}
+.slide .notes{display:none}
+
+/* Shared slide furniture */
+.brandline{position:absolute;left:90px;right:90px;bottom:32px;display:flex;justify-content:space-between;font-size:15px;color:#59627f}
+.brandline b{color:var(--muted);font-weight:600}
+.kicker{font:600 20px var(--body);color:var(--cyan);display:inline-flex;align-items:center;gap:14px;margin-bottom:16px}
+.kicker::before{content:"";width:30px;height:3px;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em}
+h2{font-size:60px;line-height:1.06;font-weight:800;margin-bottom:34px;max-width:1300px}
+h3{font-size:27px;font-weight:600;line-height:1.25}
+p{margin:0}
+.grad{background:linear-gradient(90deg,var(--cyan),var(--violet) 55%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 30px}
+.muted{color:var(--muted)}
+.c-cyan{color:var(--cyan);text-shadow:0 0 26px rgba(0,240,255,.5)}
+.c-green{color:var(--green);text-shadow:0 0 26px rgba(0,255,136,.5)}
+.c-pink{color:var(--pink);text-shadow:0 0 26px rgba(255,46,136,.5)}
+.c-violet{color:var(--violet);text-shadow:0 0 26px rgba(168,85,255,.55)}
+.c-amber{color:var(--amber);text-shadow:0 0 26px rgba(255,200,61,.45)}
+
+/* ---------- Slide 1: title ---------- */
+.s-title{display:flex;flex-direction:column;justify-content:center}
+.s-title h1{font-size:104px;line-height:1;font-weight:800;margin:6px 0 28px}
+.s-title .sub{font-size:30px;color:#c9d1ec;max-width:1050px;line-height:1.4}
+.team{display:flex;flex-wrap:wrap;gap:12px;margin-top:46px;max-width:1440px}
+.team span{border:1px solid var(--line);background:var(--bg-2);border-radius:999px;padding:10px 18px;font-size:19px;color:#dfe5fb}
+.team span.me{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 18px rgba(0,240,255,.25)}
+.title-meta{margin-top:34px;font-size:20px;color:var(--muted)}
+.title-meta a{color:var(--cyan);text-decoration:none}
+
+/* ---------- Generic grids ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:stretch}
+.bigstat{font:800 104px/1 var(--display);letter-spacing:-.04em;margin-bottom:14px}
+.statlabel{font-size:24px;color:#c9d1ec;line-height:1.4}
+.qbox{margin-top:30px;font:700 34px/1.3 var(--display);letter-spacing:-.01em}
+
+/* ---------- Flow ---------- */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-bottom:30px}
+.fstep{position:relative}
+.fstep .card{height:100%}
+.fstep:not(:last-child)::after{content:"";position:absolute;right:-17px;top:50%;width:14px;height:14px;border-top:3px solid var(--cyan);border-right:3px solid var(--cyan);transform:translateY(-50%) rotate(45deg);filter:drop-shadow(0 0 6px var(--cyan))}
+.fnum{font:600 17px var(--mono);color:var(--cyan);margin-bottom:10px;display:block}
+.fstep h3{margin-bottom:8px}
+.fstep p{font-size:19px;color:var(--muted);line-height:1.45}
+.example{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}
+.stamp{font:800 34px var(--display);color:var(--pink);border:3px solid var(--pink);border-radius:14px;padding:10px 22px;box-shadow:0 0 22px rgba(255,46,136,.45),inset 0 0 14px rgba(255,46,136,.25);transform:rotate(-4deg)}
+.example .hl{font:600 30px/1.3 var(--display);margin-bottom:8px}
+.example p{font-size:20px;color:#c3cbe6;line-height:1.45}
+
+/* ---------- Stats grid ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.stat .num{font:800 64px/1 var(--display);letter-spacing:-.03em;margin-bottom:12px}
+.stat p{font-size:20px;color:#c3cbe6;line-height:1.4}
+
+/* ---------- Charts ---------- */
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart svg text{font-family:var(--body);fill:#c9d1ec}
+.chart .axis{fill:var(--muted)}
+.src{font-size:15px;color:#6c7594;margin-top:10px}
+
+/* ---------- Theory ---------- */
+.theory{display:grid;grid-template-columns:.95fr 1.05fr;gap:36px}
+.tlist{display:flex;flex-direction:column;gap:18px}
+.tlist .card{padding:22px 26px}
+.tlist h3{font-size:24px;margin-bottom:6px}
+.tlist p{font-size:19px;color:#c3cbe6;line-height:1.45}
+.eq{font:500 22px var(--mono);color:var(--green);margin-top:8px;display:block}
+
+/* ---------- Critique ---------- */
+.crit{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.crit .card{padding:24px 26px}
+.crit .n{font:700 40px var(--display);color:var(--pink);text-shadow:0 0 18px rgba(255,46,136,.5);margin-bottom:8px;display:block}
+.crit h3{font-size:24px;margin-bottom:8px}
+.crit p{font-size:18px;color:#c3cbe6;line-height:1.45}
+
+/* ---------- Extensions ---------- */
+.ext{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.ext .card{position:relative;overflow:hidden;padding:26px 30px}
+.ext .card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--accent);box-shadow:0 0 18px var(--accent)}
+.ext h3{margin-bottom:10px}
+.ext p{font-size:19px;color:#c3cbe6;line-height:1.45}
+.ext .tie{display:block;margin-top:12px;font:500 17px var(--mono);color:var(--accent)}
+.question{font:700 32px/1.3 var(--display);margin:-12px 0 28px;max-width:1300px;color:#dfe5fb}
+
+/* ---------- Data ---------- */
+.data-top{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
+.data-top .num{font:800 54px/1 var(--display);letter-spacing:-.03em;margin-bottom:10px}
+.data-top p{font-size:20px;color:#c3cbe6;line-height:1.4}
+.data-bottom{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+.timeline svg{width:100%;height:auto}
+.timeline text{font-family:var(--body)}
+.srclist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.srclist li{display:flex;justify-content:space-between;gap:16px;font-size:20px;border-bottom:1px solid var(--line);padding-bottom:9px}
+.srclist li:last-child{border-bottom:0}
+.srclist .ok{color:var(--green);font-weight:600}
+.srclist .wip{color:var(--amber);font-weight:600}
+
+/* ---------- Models ---------- */
+.layers{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.layer{position:relative;overflow:hidden;padding:26px 26px 24px;display:flex;flex-direction:column}
+.layer::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--accent);box-shadow:0 0 18px var(--accent)}
+.layer .lnum{font:600 17px var(--mono);color:var(--accent);margin-bottom:10px}
+.layer h3{font-size:25px;margin-bottom:14px}
+.mlist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.mlist li{font-size:18px;line-height:1.4;color:#c3cbe6}
+.mlist b{display:block;color:var(--text);font-size:19px}
+.why-strip{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.why-strip .card{padding:18px 24px;font-size:18px;color:#c3cbe6;line-height:1.45}
+.why-strip b{color:var(--cyan)}
+
+/* ---------- Tests table ---------- */
+table{border-collapse:collapse;width:100%;font-size:20px}
+th,td{text-align:left;padding:15px 22px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:17px;background:var(--bg-2)}
+td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+td{color:#c3cbe6;line-height:1.4}
+tr:last-child td{border-bottom:0}
+.tbl{padding:0;overflow:hidden}
+
+/* ---------- Hypotheses ---------- */
+.hyp{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.hyp .card{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;padding:26px 30px}
+.hyp .h{font:800 44px/1 var(--display)}
+.hyp h3{margin-bottom:8px}
+.hyp p{font-size:19px;color:#c3cbe6;line-height:1.45}
+.surprise{margin-top:22px;padding:22px 30px;font:600 24px/1.4 var(--display);background:linear-gradient(135deg,rgba(0,240,255,.08),rgba(168,85,255,.08))}
+
+/* ---------- Timeline / close ---------- */
+.road{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin:20px 0 50px}
+.road::before{content:"";position:absolute;left:5%;right:5%;top:27px;height:3px;background:linear-gradient(90deg,var(--green) 0 22%,var(--amber) 22% 40%,#2a3350 40%)}
+.rnode{text-align:center;position:relative}
+.rnode .ball{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font:700 20px var(--display);background:var(--bg);border:3px solid #2f3a58;color:var(--muted);position:relative;z-index:1}
+.rnode.done .ball{border-color:var(--green);color:var(--green);box-shadow:0 0 22px rgba(0,255,136,.55)}
+.rnode.run .ball{border-color:var(--amber);color:var(--amber);box-shadow:0 0 22px rgba(255,200,61,.5)}
+.rnode h3{font-size:23px;margin-bottom:6px}
+.rnode p{font-size:17px;color:var(--muted);max-width:230px;margin:0 auto;line-height:1.4}
+.rnode .when{display:block;margin-top:8px;font:500 16px var(--mono);color:var(--muted)}
+.rnode.done .when{color:var(--green)}
+.rnode.run .when{color:var(--amber)}
+.thanks{display:grid;grid-template-columns:.9fr 1.1fr;gap:36px;align-items:center}
+.thanks h3{font-size:76px;font-weight:800;line-height:1}
+.thanks p{font-size:24px;color:#c9d1ec;margin-top:16px;line-height:1.4}
+.linkcard{padding:26px 30px}
+.linkcard .lbl{font-size:17px;color:var(--muted);margin-bottom:6px}
+.linkcard a{font:600 22px var(--mono);color:var(--cyan);text-decoration:none;white-space:nowrap}
+.linkcard .row+.row{margin-top:18px}
+
+/* ---------- Presenter controls ---------- */
+.hud{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:10px 18px;font:500 14px var(--body);color:#7e88a8;opacity:.0;transition:opacity .3s}
+body:hover .hud,.hud:focus-within{opacity:1}
+.hud button{background:rgba(14,18,32,.9);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:7px 14px;font:600 13px var(--body);cursor:pointer;margin-left:6px}
+.hud button:hover{border-color:var(--cyan);color:var(--cyan)}
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));box-shadow:0 0 12px var(--cyan);transition:width .4s;z-index:21}
+.notes-panel{position:fixed;right:18px;bottom:62px;width:min(520px,92vw);max-height:46vh;overflow:auto;background:rgba(10,13,23,.96);border:1px solid var(--line);border-radius:18px;padding:18px 20px;font-size:16px;line-height:1.6;color:#dfe5fb;z-index:22;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.notes-panel.open{display:block}
+.notes-panel .t{font:600 13px var(--mono);color:var(--cyan);margin-bottom:8px;display:block}
+.timer{font-family:var(--mono);color:var(--cyan)}
+.help{color:#59627f}
+
+/* Finally, print: one slide per page, so "Save as PDF" gives a clean deck */
+
+.nw{white-space:nowrap}
+/* bigger type on the lighter slides so they fill the stage */
+.layers .card{min-height:430px}
+.layer h3{font-size:27px}
+.mlist{gap:16px}
+.mlist li{font-size:20px}
+.mlist b{font-size:22px;margin-bottom:2px}
+.why-strip .card{font-size:20px;padding:22px 26px}
+.tbl table{font-size:23px}
+.tbl th{font-size:19px;padding:18px 26px}
+.tbl td{padding:24px 26px}
+.hyp .card{padding:34px 34px;min-height:190px}
+.hyp h3{font-size:30px}
+.hyp p{font-size:21px}
+.hyp .h{font-size:56px}
+.surprise{font-size:28px;padding:28px 34px}
+.flow .card{min-height:250px}
+.stats .card{padding:36px 34px;min-height:250px}
+.stat .num{font-size:76px}
+.stat p{font-size:22px}
+.fstep p{font-size:20px}
+.example{padding:30px 34px}
+
+
+/* ---------- Final deck layouts ---------- */
+.s-title .group-label{margin-top:44px;font:700 22px var(--display);color:var(--text)}
+.s-title .team{margin-top:14px}
+.s-title .kicker{margin-bottom:22px}
+.split{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:start}
+.split.even{grid-template-columns:1fr 1fr}
+.numlist{display:flex;flex-direction:column;gap:30px;padding-top:6px}
+.nrow{display:grid;grid-template-columns:62px 1fr;gap:22px;align-items:start}
+.nrow p{font-size:25px;line-height:1.45;color:#dfe5fb}
+.nrow h3{font-size:28px;margin-bottom:6px}
+.nrow .muted-p{font-size:22px;color:#c3cbe6;line-height:1.45}
+.nbox,.hbox{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font:800 24px var(--display);color:#04121a}
+.c1{background:var(--cyan);box-shadow:0 0 22px rgba(0,240,255,.55)}
+.c2{background:var(--green);box-shadow:0 0 22px rgba(0,255,136,.5)}
+.c3{background:var(--violet);box-shadow:0 0 22px rgba(168,85,255,.55)}
+.c4{background:var(--pink);box-shadow:0 0 22px rgba(255,46,136,.55)}
+.tlabel{font:700 19px var(--display);color:var(--cyan);margin-bottom:14px;letter-spacing:-.01em}
+.tlabel.solo{margin-bottom:16px}
+.card.tbl{padding:22px 24px}
+.card.tbl table{font-size:21px}
+.card.tbl th{font-size:18px;padding:14px 18px;background:#0a0d17;color:var(--muted)}
+.card.tbl td{padding:15px 18px;white-space:normal}
+.card.tbl td:first-child{white-space:normal}
+.card.tbl td.v{font:700 24px var(--display)}
+.card.tbl.wide table{font-size:23px}
+.card.tbl.wide td{padding:20px 22px}
+.callout{margin-top:24px;border:1px solid #2a3350;border-radius:18px;padding:20px 28px;font-size:24px;color:#dfe5fb;background:linear-gradient(135deg,rgba(0,240,255,.08),rgba(168,85,255,.08))}
+.callout.tight{font-size:21px;padding:16px 22px;margin-top:20px}
+.example{padding:26px 30px}
+.ex-body{display:flex;flex-direction:column}
+.ex-k{font:600 16px var(--body);color:var(--muted);margin-top:16px}
+.ex-k:first-child{margin-top:0}
+.ex-hl{font:600 26px/1.3 var(--display);margin-top:4px}
+.ex-v{font-size:22px;margin-top:6px;line-height:1.4;color:#dfe5fb}
+.example .stamp{display:inline-block;font-size:20px;padding:3px 12px;margin-right:8px;transform:rotate(-3deg)}
+.chart .takeaway{font:700 23px var(--display);margin-top:14px}
+.data-split{grid-template-columns:1.05fr .95fr}
+.shots{display:flex;flex-direction:column;gap:22px}
+.shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px}
+.shot img{width:100%;border-radius:10px;border:1px solid #2a3350}
+.shot figcaption{font-size:17px;color:var(--muted);margin-top:10px;font-style:italic}
+.news-card{margin-bottom:22px;padding:22px 26px}
+.ipo-hl{font:700 28px/1.3 var(--display);font-style:italic}
+.moves{font-size:22px;line-height:1.6;margin-top:10px}
+.hyp{display:flex;flex-direction:column;gap:18px}
+.hyp .card{display:grid;grid-template-columns:62px 1fr;gap:20px;align-items:center;padding:20px 24px}
+.hyp p{font-size:25px;color:#dfe5fb}
+.hbox{font-size:20px}
+.s-thanks{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.s-thanks h1{font-size:150px;line-height:1;font-weight:800;filter:drop-shadow(0 0 30px rgba(0,240,255,.35))}
+.s-thanks .q{font:500 44px var(--display);color:#c9d1ec;margin-top:26px;font-style:italic}
+
+
+/* fixes so the older template rules don't leak into the final layouts */
+.card.example{display:block}
+.hyp .card{min-height:0;padding:22px 26px}
+.hyp .h{font-size:inherit}
+.s-five .numlist{gap:52px;padding-top:30px}
+.s-five .nrow h3{font-size:32px}
+.s-five .nrow .muted-p{font-size:24px}
+.s-three .numlist{gap:36px;padding-top:12px}
+.s-three .nrow h3{font-size:30px}
+.s-three .nrow .muted-p{font-size:23px}
+
+
+.example .ex-k{font-size:18px;margin-top:22px}
+.example .ex-k:first-child{margin-top:0}
+.example .ex-hl{font:600 30px/1.3 var(--display);color:var(--text);margin-top:6px}
+.example .ex-v{font-size:25px;line-height:1.4;color:#dfe5fb;margin-top:8px}
+.card.example{padding:32px 34px}
+.s-three .numlist{gap:50px;padding-top:24px}
+.s-five .chart svg{margin-top:10px}
+
+.example .ex-v.c-green{color:var(--green)}
+
+@media print{
+  @page{size:1600px 900px;margin:0}
+  html,body{overflow:visible;height:auto;background:var(--bg)}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;position:static;width:1600px;height:auto}
+  .slide{position:relative;opacity:1;visibility:visible;width:1600px;height:900px;page-break-after:always;break-after:page;transition:none}
+  .hud,.progress,.notes-panel{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (prefers-reduced-motion:reduce){.slide{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progressBar"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1. Cover -->
+<section class="slide s-title" aria-label="Slide 1, title">
+  <div class="kicker">MGT 6078 Finance and Investments | Final Project</div>
+  <h1>Can ChatGPT Still<br><span class="grad">Beat the Market?</span></h1>
+  <p class="sub">Testing whether an AI news-trading edge still works after everyone knows about it</p>
+  <p class="group-label">Group 5</p>
+  <div class="team">
+    <span class="me">Anay A. Joshi</span><span>Eriore Adeoluwa</span><span>Immanuella Akumabor</span><span>Himanshu Bhatt</span><span>Dikshita Chalke</span><span>Adeola H Fasola</span><span>Qianye Lin</span>
+  </div>
+</section>
+
+<!-- 2. The short version -->
+<section class="slide" aria-label="Slide 2, the short version">
+  <h2>The short version</h2>
+  <div class="split">
+    <div class="numlist">
+      <div class="nrow"><span class="nbox c1">1</span><p><b>The paper:</b> Lopez-Lira &amp; Tang (2024) asked GPT-4 if each headline was good or bad news. Trading on the answers made about 0.38% a day.</p></div>
+      <div class="nrow"><span class="nbox c2">2</span><p><b>The catch:</b> The profit shrank every year as more investors started using AI tools.</p></div>
+      <div class="nrow"><span class="nbox c3">3</span><p><b>Our question:</b> Does the edge still work now that the paper is public and AI is everywhere?</p></div>
+      <div class="nrow"><span class="nbox c4">4</span><p><b>What's new:</b> Fresh 2026 news, a clean test of AI model size, and real trading costs.</p></div>
+    </div>
+    <div class="card tbl">
+      <div class="tlabel">The numbers that matter</div>
+      <table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody>
+        <tr><td>Daily profit</td><td class="v c-green">0.38%</td></tr>
+        <tr><td>Sharpe ratio</td><td class="v c-cyan">3.28</td></tr>
+        <tr><td>Sharpe in late 2021</td><td class="v">6.54</td></tr>
+        <tr><td>Sharpe in 2023</td><td class="v c-pink">2.33</td></tr>
+        <tr><td>Our 2026 headlines</td><td class="v c-violet">289,217</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- 3. How the paper worked -->
+<section class="slide s-three" aria-label="Slide 3, how the original paper worked">
+  <h2>How the original paper worked</h2>
+  <div class="split">
+    <div class="numlist">
+      <div class="nrow"><span class="nbox c1">1</span><div><h3>Collect headlines</h3><p class="muted-p">About 134,000 headlines on 4,100 U.S. companies (Oct 2021 to Dec 2023)</p></div></div>
+      <div class="nrow"><span class="nbox c2">2</span><div><h3>Ask one question</h3><p class="muted-p">"Is this headline good or bad for the stock price?"</p></div></div>
+      <div class="nrow"><span class="nbox c3">3</span><div><h3>Turn it into a score</h3><p class="muted-p">YES = +1, NO = -1, UNKNOWN = 0</p></div></div>
+      <div class="nrow"><span class="nbox c4">4</span><div><h3>Trade on it</h3><p class="muted-p">Buy good-news stocks, sell short bad-news stocks, every day</p></div></div>
+    </div>
+    <div class="card example">
+      <div class="tlabel">Example: why context matters</div>
+      <div class="ex-body">
+        <span class="ex-k">The headline</span>
+        <p class="ex-hl">"Cigna Calls Off Humana Pursuit, Plans Big Stock Buyback"</p>
+        <span class="ex-k">A standard sentiment tool said</span>
+        <p class="c-green ex-v">Positive</p>
+        <span class="ex-k">GPT-4 said, for Humana</span>
+        <p class="ex-v"><span class="stamp">NO</span> Humana loses the premium a buyer would have paid.</p>
+        <span class="ex-k">The lesson</span>
+        <p class="ex-v"><b>The AI understood whose news it was.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Results -->
+<section class="slide" aria-label="Slide 4, it made money but less every year">
+  <h2>It made money, but less every year</h2>
+  <div class="split even">
+    <div class="card tbl">
+      <div class="tlabel">Main results from the paper</div>
+      <table><thead><tr><th>Result</th><th>In plain words</th></tr></thead><tbody>
+        <tr><td class="c-green">0.38% a day</td><td>Average daily profit before costs</td></tr>
+        <tr><td class="c-cyan">Sharpe ratio 3.28</td><td>Very high return for the risk taken</td></tr>
+        <tr><td>Survives risk factors</td><td>Not just a hidden bet on known risks</td></tr>
+        <tr><td class="c-pink">Short side: 0.29% a day</td><td>Most profit came from bad news</td></tr>
+        <tr><td class="c-amber">About 0.20% cost</td><td>Trading cost that wipes out the profit</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card chart">
+      <div class="tlabel">Sharpe ratio by year</div>
+      <svg id="decayChart" role="img" aria-label="Sharpe ratio: late 2021 6.54, 2022 3.68, 2023 2.33"></svg>
+      <p class="takeaway">The edge fell by about two thirds in two years.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Why it works -->
+<section class="slide s-five" aria-label="Slide 5, why it works">
+  <h2>Why it works</h2>
+  <div class="split even">
+    <div class="numlist">
+      <div class="nrow"><span class="nbox c1">1</span><div><h3>Some investors are slow</h3><p class="muted-p">Prices take a day or two to fully react to news.</p></div></div>
+      <div class="nrow"><span class="nbox c2">2</span><div><h3>Fixing it is risky</h3><p class="muted-p">Small stocks and short selling are hard and costly to trade.</p></div></div>
+      <div class="nrow"><span class="nbox c3">3</span><div><h3>The AI must be smart enough</h3><p class="muted-p">Weak models get it wrong and lose money. Only large models profit.</p></div></div>
+    </div>
+    <div class="card chart">
+      <div class="tlabel">Sharpe ratio by AI model</div>
+      <svg id="ladderChart" role="img" aria-label="Sharpe ratio by AI model, GPT-4 3.28 down to GPT-2-Large -0.93"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Related research -->
+<section class="slide" aria-label="Slide 6, what other research tells us">
+  <h2>What other research tells us</h2>
+  <div class="card tbl wide">
+    <table><thead><tr><th>Study</th><th>What they found</th><th>Why it matters for us</th></tr></thead><tbody>
+      <tr><td>Tetlock (2007)</td><td>The tone of news predicts market moves</td><td>News holds information about prices</td></tr>
+      <tr><td>Loughran &amp; McDonald (2011)</td><td>Finance needs its own word lists for tone</td><td>Our simple sentiment comparison</td></tr>
+      <tr><td>Jiang, Li &amp; Wang (2021)</td><td>Prices underreact to firm news</td><td>Why trading on news can work</td></tr>
+      <tr><td>Gu, Kelly &amp; Xiu (2020)</td><td>Machine learning improves return prediction</td><td>Our choice of forecasting models</td></tr>
+      <tr><td>McLean &amp; Pontiff (2016)</td><td>Profitable patterns weaken after they are published</td><td class="c-cyan">Exactly what we test for this paper</td></tr>
+    </tbody></table>
+  </div>
+  <div class="callout"><b class="c-cyan">Our gap:</b> no study has tested whether the ChatGPT news edge survived its own publication.</div>
+</section>
+
+<!-- 7. What's new -->
+<section class="slide" aria-label="Slide 7, what's new in our project">
+  <h2>What's new in our project</h2>
+  <div class="card tbl wide">
+    <table><thead><tr><th>Gap in the paper</th><th>What we add</th></tr></thead><tbody>
+      <tr><td>Short sample (about two years)</td><td>Fresh 2026 news the paper never saw</td></tr>
+      <tr><td>AI models came from different companies</td><td>One model family (Gemma) in three sizes, so only size changes</td></tr>
+      <tr><td>Short-selling and trading costs ignored</td><td>Check which stocks can be shorted, and include realistic costs</td></tr>
+      <tr><td>Profit decline shown only as a trend</td><td>A proper before-and-after test around ChatGPT's launch</td></tr>
+      <tr><td>Unclear if profit is news or risk</td><td>Test whether the AI score predicts future earnings</td></tr>
+    </tbody></table>
+  </div>
+  <div class="callout"><b class="c-green">Our question:</b> is the edge still there after publication, and if so, where does it survive?</div>
+</section>
+
+<!-- 8. Data -->
+<section class="slide" aria-label="Slide 8, our data">
+  <h2>Our data, all from free sources</h2>
+  <div class="split data-split">
+    <div>
+      <div class="card tbl">
+        <table><thead><tr><th>Data</th><th>Source</th><th>Status</th></tr></thead><tbody>
+          <tr><td>289,217 news headlines, Apr to Nov 2026</td><td>Alpaca News</td><td class="c-green">Collected</td></tr>
+          <tr><td>Daily prices, 6,030 stocks (1,014,623 days)</td><td>Alpaca Market Data</td><td class="c-green">Collected</td></tr>
+          <tr><td>Risk factors (FF3, FF5, q) and VIX</td><td>Ken French, global-q, FRED</td><td class="c-green">Collected</td></tr>
+          <tr><td>2021 to 2023 news, to replicate the paper</td><td>FNSPID</td><td class="c-amber">Being added</td></tr>
+          <tr><td>Company earnings</td><td>SEC EDGAR</td><td class="c-amber">Being added</td></tr>
+        </tbody></table>
+      </div>
+      <div class="callout tight"><b class="c-cyan">Key rule:</b> a headline only counts from the moment a real investor could trade on it.</div>
+    </div>
+    <div class="shots">
+      <figure class="shot"><div class="tlabel">Our news download</div><img src="assets/img/news-summary.png" alt="Terminal output: 289,217 articles"><figcaption>289,217 headlines</figcaption></figure>
+      <figure class="shot"><div class="tlabel">Our price download</div><img src="assets/img/price-summary.png" alt="Terminal output: feed used sip, 6,030 tickers, 1,014,623 ticker-days"><figcaption>6,030 stocks, official prices</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Anthropic case study -->
+<section class="slide" aria-label="Slide 9, case study Anthropic's IPO today">
+  <h2>Case study: Anthropic's IPO today</h2>
+  <div class="split even">
+    <div>
+      <div class="card news-card">
+        <div class="tlabel">The news (released the night before)</div>
+        <p class="ipo-hl">"Anthropic prices IPO at $83 a share, above its $70 to $78 range"</p>
+      </div>
+      <div class="card tbl">
+        <div class="tlabel">How the paper's strategy reads it</div>
+        <table><thead><tr><th>Step</th><th>What happens</th></tr></thead><tbody>
+          <tr><td>News type</td><td>Good news: priced above its range</td></tr>
+          <tr><td>Paper's rule</td><td>Good news before 9 a.m., so buy at the open</td></tr>
+          <tr><td>Entry price</td><td>$111.50, the first trade</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="card chart">
+      <div class="tlabel">What actually happened (price per share)</div>
+      <svg id="ipoChart" role="img" aria-label="IPO price 83 dollars, first trade 111.50 dollars, mid-afternoon about 95 dollars"></svg>
+      <p class="moves"><b class="c-green">+34%</b> from the IPO price to the first trade<br><b class="c-pink">About -15%</b> from the first trade to mid-afternoon</p>
+    </div>
+  </div>
+  <div class="callout"><b class="c-pink">The lesson:</b> the good news was priced in before anyone could trade it. IPOs fall outside our sample, since there is no earlier price.</div>
+</section>
+
+<!-- 10. Models -->
+<section class="slide" aria-label="Slide 10, our models">
+  <h2>Our models, and why we chose them</h2>
+  <div class="card tbl wide">
+    <table><thead><tr><th>Job</th><th>Model</th><th>Why we chose it</th></tr></thead><tbody>
+      <tr><td>Read the news</td><td class="c-cyan">Gemma (1B, 4B, 12B)</td><td>Same family in three sizes, and it never saw our 2026 news</td></tr>
+      <tr><td>Simple comparison</td><td class="c-green">FinBERT and a finance word list</td><td>Shows if the AI adds anything beyond basic sentiment</td></tr>
+      <tr><td>Forecast returns</td><td class="c-violet">Elastic Net</td><td>Simple benchmark</td></tr>
+      <tr><td>Forecast returns</td><td class="c-violet">LightGBM</td><td>Finds patterns, like bad news hurting small stocks more</td></tr>
+      <tr><td>Forecast returns</td><td class="c-violet">NN3 neural network</td><td>Small networks work best for stock returns</td></tr>
+      <tr><td>Explain results</td><td class="c-pink">Topic models and SHAP</td><td>Shows which news the AI gets right or wrong</td></tr>
+    </tbody></table>
+  </div>
+  <div class="callout"><b class="c-cyan">Fair testing:</b> every model is tested only on future data it has never seen.</div>
+</section>
+
+<!-- 11. Tests and hypotheses -->
+<section class="slide" aria-label="Slide 11, how we test it">
+  <h2>How we test it: checks and hypotheses</h2>
+  <div class="split even">
+    <div class="card tbl">
+      <div class="tlabel">Robustness checks (project guideline)</div>
+      <table><thead><tr><th>Check</th><th>Our test</th></tr></thead><tbody>
+        <tr><td>Main result</td><td>Daily trading results and regressions</td></tr>
+        <tr><td>Different periods</td><td>Before vs after ChatGPT; calm vs stressed markets</td></tr>
+        <tr><td>Other explanations</td><td>Adjust for FF3, FF5 and q-factor models</td></tr>
+        <tr><td>Cash flow or discount rate?</td><td>Does the AI score predict future earnings?</td></tr>
+        <tr><td>Frequency</td><td>Daily vs weekly signals</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <div class="tlabel solo">Our hypotheses</div>
+      <div class="hyp">
+        <div class="card"><span class="hbox c1">H1</span><p>The edge is smaller in 2026</p></div>
+        <div class="card"><span class="hbox c2">H2</span><p>The bigger model beats the small one</p></div>
+        <div class="card"><span class="hbox c3">H3</span><p>Most profit stays in hard-to-trade stocks</p></div>
+        <div class="card"><span class="hbox c4">H4</span><p>The AI score predicts future earnings</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. Thank you -->
+<section class="slide s-thanks" aria-label="Slide 12, thank you">
+  <h1 class="grad">Thank you</h1>
+  <p class="q">Questions?</p>
+</section>
+
+</div></div>
+
+<div class="notes-panel" id="notesPanel" aria-live="polite"></div>
+<div class="hud">
+  <span class="help">Arrows or space to move, N notes, F full screen, P print to PDF</span>
+  <span><span class="timer" id="timerText">00:00</span> &nbsp; <span id="countText">1 / 12</span>
+    <button type="button" id="prevBtn">Back</button><button type="button" id="nextBtn">Next</button><button type="button" id="notesBtn">Notes</button><button type="button" id="fullBtn">Full screen</button></span>
+</div>
+
+<script>
+const speakerNotes = [{"time": "0:30", "note": "Good afternoon, we're Group 5. Our project asks a simple question: can ChatGPT still beat the market? We build on a well-known paper by Lopez-Lira and Tang, and we test whether their result still holds today."}, {"time": "1:00", "note": "Here's the whole story on one slide. The paper asked GPT-4 whether news headlines were good or bad for a stock. Trading on those answers made about 0.38 percent a day, with a very high Sharpe ratio of 3.28. But the profit got smaller every year as more people started using AI tools. So our question is whether the edge still exists now that the paper is public. What's new in our work is fresh 2026 news, a clean test of model size, and real trading costs."}, {"time": "1:00", "note": "So, here's how the paper worked. They took about 134,000 headlines on about 4,100 U.S. companies. For each one, they asked GPT-4 one question: is this headline good or bad for the stock price? A YES became plus one, a NO became minus one, and UNKNOWN became zero. Then they bought the good-news stocks and sold short the bad-news stocks. My favourite example is on the right. When Cigna dropped its plan to buy Humana, a standard sentiment tool called it positive. GPT-4 said NO, because Humana's shareholders lost the takeover premium. That's understanding context, not just counting words."}, {"time": "1:00", "note": "These are the main results. About 0.38 percent a day before trading costs, and a Sharpe ratio, which is return per unit of risk, of 3.28. The profit stayed after adjusting for the standard Fama-French risk factors, so it isn't just a hidden factor bet. Most of the money came from bad news. And the chart on the right is the key point for us: the Sharpe ratio dropped from 6.54 to 3.68 to 2.33 in just two years."}, {"time": "1:00", "note": "Why does this work? Three simple ideas. First, some investors are slow, so prices react to news with a delay. Second, fixing the mispricing is risky and costly, especially for small stocks and short selling. Third, the AI has to be smart enough. A weak model actually loses money. You can see it in the chart: GPT-1, GPT-2 and BERT are below zero, and only the large models make money."}, {"time": "1:00", "note": "Here's where the paper sits in the research. Tetlock showed back in 2007 that the tone of news can predict the market. Loughran and McDonald built finance word lists for measuring tone. Jiang, Li and Wang showed that prices underreact to news, which is why this kind of strategy can work. Gu, Kelly and Xiu showed machine learning improves return prediction. And the most important one for us: McLean and Pontiff showed that return patterns lose a lot of their profit after they're published. In my opinion, that's exactly what we should test here."}, {"time": "1:10", "note": "So, this is what's new in our project. Each part fixes a gap in the paper. The paper's sample is short, so we add fresh 2026 news it never saw. The paper compares AI models from different companies, so we use one family, Gemma, in three sizes, and only size changes. The paper ignores short-selling and trading costs, so we include them. And the decline in profit is only a trend line, so we run a proper before-and-after test and check whether the AI score predicts future earnings."}, {"time": "1:00", "note": "Honestly, the hardest part has been the data. We have 289,217 headlines from April to November 2026, more than twice the paper's sample, and daily prices for 6,030 stocks, over a million stock-days. The screenshots on the right are our actual results. We also have all the standard risk factors and the VIX. Everything comes from free sources, so anyone can rebuild our data. And the most important rule: a headline only counts from the moment a real investor could have traded on it."}, {"time": "1:10", "note": "Here's a real case from today. Last night, Anthropic priced its IPO at 83 dollars a share, above its expected range. That's clearly good news. Under the paper's rules, good news before 9 a.m. means you buy at the open. But look at what happened. The first trade was at 111.50, already 34 percent above the IPO price. By mid-afternoon it was around 95 dollars, so buying at the open would have lost about 15 percent. The market priced the good news before anyone could trade it. In my opinion, that's exactly what our first hypothesis is about. IPOs fall outside our main sample, because there's no earlier price, but this shows the idea clearly."}, {"time": "1:00", "note": "Here are our models, in plain terms. Gemma in three sizes reads every headline with the paper's exact question. FinBERT and a finance word list are our simple comparison, so we know if the AI adds anything new. Then three forecasting models: Elastic Net is the simple benchmark, LightGBM finds patterns like bad news hurting small stocks more, and NN3 is a small neural network that research shows works well for stock returns. Every model is tested only on future data."}, {"time": "1:00", "note": "This slide covers every robustness check in our project guideline, plus our hypotheses. We test different periods: before and after ChatGPT's launch, and calm versus stressed markets. We check other explanations by adjusting for the Fama-French three-factor, five-factor and q-factor models. We test cash flow versus discount rate by checking whether the AI score predicts future earnings. And we compare daily and weekly signals. On the right are our four hypotheses. And honestly, if the edge is still large in 2026, that would be the bigger surprise."}, {"time": "0:15", "note": "Thank you. We're happy to take your questions."}];
+
+// So, scale the 1600 x 900 stage to whatever screen we're on
+(function(){
+  const stageBox = document.getElementById('stage');
+  function fitStage(){
+    const scaleBy = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    stageBox.style.transform = 'translate(-50%, -50%) scale(' + scaleBy + ')';
+  }
+  window.addEventListener('resize', fitStage); fitStage();
+})();
+
+// let's do now the slide navigation, notes and timer
+(function(){
+  const allSlides = Array.from(document.querySelectorAll('.slide'));
+  const notesPanel = document.getElementById('notesPanel');
+  let slideIndex = 0, timerStart = null;
+
+  function renderNotes(){
+    const noteItem = speakerNotes[slideIndex] || {time:'', note:''};
+    notesPanel.innerHTML = '<span class="t">Slide ' + (slideIndex + 1) + ' of ' + allSlides.length + ' | about ' + noteItem.time + '</span>' + noteItem.note;
+  }
+  function goTo(targetIndex){
+    slideIndex = Math.max(0, Math.min(allSlides.length - 1, targetIndex));
+    allSlides.forEach((slideEl, idx) => slideEl.classList.toggle('active', idx === slideIndex));
+    document.getElementById('countText').textContent = (slideIndex + 1) + ' / ' + allSlides.length;
+    document.getElementById('progressBar').style.width = ((slideIndex + 1) / allSlides.length * 100) + '%';
+    renderNotes();
+    if(slideIndex > 0 && timerStart === null) timerStart = Date.now();
+    if(location.hash !== '#' + (slideIndex + 1)) history.replaceState(null, '', '#' + (slideIndex + 1));
+  }
+  function toggleFull(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    else document.exitFullscreen && document.exitFullscreen();
+  }
+  document.addEventListener('keydown', evt => {
+    if(['ArrowRight','PageDown',' ','Enter'].includes(evt.key)){ evt.preventDefault(); goTo(slideIndex + 1); }
+    else if(['ArrowLeft','PageUp','Backspace'].includes(evt.key)){ evt.preventDefault(); goTo(slideIndex - 1); }
+    else if(evt.key === 'Home') goTo(0);
+    else if(evt.key === 'End') goTo(allSlides.length - 1);
+    else if(evt.key === 'n' || evt.key === 'N') notesPanel.classList.toggle('open');
+    else if(evt.key === 'f' || evt.key === 'F') toggleFull();
+    else if(evt.key === 'p' || evt.key === 'P') window.print();
+  });
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(slideIndex - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(slideIndex + 1));
+  document.getElementById('notesBtn').addEventListener('click', () => notesPanel.classList.toggle('open'));
+  document.getElementById('fullBtn').addEventListener('click', toggleFull);
+
+  // In my opinion, swiping should work too, for presenting from an iPad
+  let touchStartX = null;
+  document.addEventListener('touchstart', evt => { touchStartX = evt.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', evt => {
+    if(touchStartX === null) return;
+    const swipeDistance = evt.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(swipeDistance) > 50) goTo(slideIndex + (swipeDistance < 0 ? 1 : -1));
+    touchStartX = null;
+  });
+
+  setInterval(() => {
+    if(timerStart === null) return;
+    const secondsGone = Math.floor((Date.now() - timerStart) / 1000);
+    document.getElementById('timerText').textContent = String(Math.floor(secondsGone / 60)).padStart(2,'0') + ':' + String(secondsGone % 60).padStart(2,'0');
+  }, 500);
+
+  const startFromHash = parseInt(location.hash.slice(1), 10);
+  goTo(Number.isFinite(startFromHash) ? startFromHash - 1 : 0);
+})();
+
+// Finally, the three neon charts, drawn from the numbers on the slides
+(function(){
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const make = (tag, attrs, text) => { const el = document.createElementNS(svgNS, tag); Object.entries(attrs).forEach(([key, val]) => el.setAttribute(key, val)); if(text !== undefined) el.textContent = text; return el; };
+  function addGlow(svgEl, glowId){
+    const defs = make('defs', {});
+    const filterEl = make('filter', {id:glowId, x:'-30%', y:'-60%', width:'160%', height:'220%'});
+    filterEl.appendChild(make('feGaussianBlur', {stdDeviation:'3.5', result:'blurred'}));
+    const mergeEl = make('feMerge', {});
+    mergeEl.appendChild(make('feMergeNode', {in:'blurred'})); mergeEl.appendChild(make('feMergeNode', {in:'SourceGraphic'}));
+    filterEl.appendChild(mergeEl); defs.appendChild(filterEl); svgEl.appendChild(defs);
+    return defs;
+  }
+  // So, one helper for vertical neon bars with value labels on top
+  function drawColumns(svgId, columnRows, maxVal, gridStep, formatValue, prefixAxis){
+    const columnSvg = document.getElementById(svgId);
+    const svgW = 700, baseY = 330, topY = 40, leftX = 80, rightX = 680;
+    const toY = val => baseY - val / maxVal * (baseY - topY);
+    columnSvg.setAttribute('viewBox', '0 0 ' + svgW + ' 380');
+    addGlow(columnSvg, svgId + 'Glow');
+    for(let gridVal = 0; gridVal <= maxVal; gridVal += gridStep){
+      columnSvg.appendChild(make('line', {x1:leftX, x2:rightX, y1:toY(gridVal), y2:toY(gridVal), stroke:'#1a2135'}));
+      columnSvg.appendChild(make('text', {x:leftX - 12, y:toY(gridVal) + 6, 'text-anchor':'end', class:'axis', 'font-size':17}, prefixAxis + gridVal));
+    }
+    const slotW = (rightX - leftX) / columnRows.length, barW = slotW * 0.5;
+    columnRows.forEach(([colLabel, colVal, colColor], idx) => {
+      const centerX = leftX + slotW * (idx + 0.5);
+      columnSvg.appendChild(make('rect', {x:centerX - barW/2, y:toY(colVal), width:barW, height:baseY - toY(colVal), rx:8, fill:colColor, filter:'url(#' + svgId + 'Glow)'}));
+      columnSvg.appendChild(make('text', {x:centerX, y:toY(colVal) - 14, 'text-anchor':'middle', 'font-weight':700, 'font-size':26, fill:'#eef2ff'}, formatValue(colVal)));
+      columnSvg.appendChild(make('text', {x:centerX, y:baseY + 32, 'text-anchor':'middle', class:'axis', 'font-size':19}, colLabel));
+    });
+  }
+  drawColumns('decayChart', [['Late 2021', 6.54, '#00f0ff'], ['2022', 3.68, '#a855ff'], ['2023', 2.33, '#ff2e88']], 8, 2, val => val.toFixed(2), '');
+  drawColumns('ipoChart', [['IPO price', 83, '#a855ff'], ['First trade', 111.5, '#00ff88'], ['Mid-afternoon (approx.)', 95, '#ff2e88']], 140, 20, val => '$' + val.toFixed(2), '$');
+
+  const ladderRows = [['GPT-4',3.28],['DistilBart',1.61],['GPT-3.5',1.49],['RavenPack',1.39],['BART-Large',1.24],['BERT-Large',1.12],['GPT-1',-0.31],['GPT-2',-0.31],['FinBERT',-0.43],['BERT',-0.61],['GPT-2-Large',-0.93]];
+  const ladderSvg = document.getElementById('ladderChart');
+  const rowGap = 40, nameWidth = 150, svgWidth = 700, plotLeft = nameWidth + 14, plotRight = svgWidth - 60, lowEnd = -1.6, highEnd = 3.6;
+  const toX = val => plotLeft + (val - lowEnd) / (highEnd - lowEnd) * (plotRight - plotLeft);
+  ladderSvg.setAttribute('viewBox', '0 0 ' + svgWidth + ' ' + (ladderRows.length * rowGap + 36));
+  addGlow(ladderSvg, 'glowLadder');
+  [-1,0,1,2,3].forEach(tickVal => {
+    ladderSvg.appendChild(make('line', {x1:toX(tickVal), x2:toX(tickVal), y1:0, y2:ladderRows.length*rowGap, stroke: tickVal === 0 ? '#3a4566' : '#1a2135'}));
+    ladderSvg.appendChild(make('text', {x:toX(tickVal), y:ladderRows.length*rowGap + 28, 'text-anchor':'middle', class:'axis', 'font-size':17}, tickVal));
+  });
+  ladderRows.forEach(([modelName, sharpeValue], rowIdx) => {
+    const yTop = rowIdx * rowGap + 6;
+    const barStart = Math.min(toX(0), toX(sharpeValue)), barLength = Math.abs(toX(sharpeValue) - toX(0));
+    const barColor = sharpeValue < 0 ? '#ff2e88' : (modelName === 'GPT-4' ? '#00ff88' : '#00f0ff');
+    ladderSvg.appendChild(make('text', {x:nameWidth, y:yTop + 20, 'text-anchor':'end', 'font-size':19, 'font-weight': modelName === 'GPT-4' ? 700 : 400}, modelName));
+    ladderSvg.appendChild(make('rect', {x:barStart, y:yTop + 3, width:Math.max(barLength,1), height:rowGap - 15, rx:5, fill:barColor, opacity: modelName === 'GPT-4' || sharpeValue < 0 ? 1 : .6, filter:'url(#glowLadder)'}));
+    const labelX = sharpeValue < 0 ? barStart - 8 : barStart + barLength + 8;
+    ladderSvg.appendChild(make('text', {x:labelX, y:yTop + 20, 'text-anchor': sharpeValue < 0 ? 'end' : 'start', 'font-size':18, fill:barColor}, sharpeValue.toFixed(2)));
+  });
+})();
+</script>
+</body>
+</html>
