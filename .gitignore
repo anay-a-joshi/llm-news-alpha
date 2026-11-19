@@ -1,0 +1,10 @@
+# So, raw data and the venv stay off GitHub (they are large and rebuildable)
+newsenv/
+*.csv
+alpaca_news_output/
+price_data_output/
+fnspid_output/
+factor_data_output/
+.env
+.DS_Store
+__pycache__/

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM News Alpha | Group 5 | MGT 6078 Georgia Tech</title>
+<meta name="description" content="Group 5, MGT 6078 at Georgia Tech: does the ChatGPT news-headline alpha from Lopez-Lira & Tang (2024) survive publication and mass LLM adoption?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060b;
+  --bg-2:#0a0d17;
+  --card:#0e1220;
+  --line:#1c2336;
+  --text:#eef2ff;
+  --muted:#8d97b5;
+  --cyan:#00f0ff;
+  --green:#00ff88;
+  --pink:#ff2e88;
+  --violet:#a855ff;
+  --amber:#ffc83d;
+  --display:"Sora",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(168,85,255,.18), transparent 60%),
+    radial-gradient(700px 500px at -10% 30%, rgba(0,240,255,.10), transparent 60%),
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px) 0 0/100% 64px,
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0/64px 100%;}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+/* So, the top bar: logo on the left, three tabs on the right */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(5,6,11,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:20px}
+.logo{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;font:700 1.12rem var(--display);letter-spacing:-.01em}
+.logo-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 0 22px rgba(0,240,255,.45)}
+.logo small{font:500 .78rem var(--body);color:var(--muted);display:block;letter-spacing:0}
+.tabs{display:flex;gap:6px;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:5px}
+.tab{appearance:none;border:0;background:transparent;color:var(--muted);font:600 .92rem var(--body);padding:9px 18px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .2s,background .2s}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{color:#04121a;background:var(--cyan);box-shadow:0 0 18px rgba(0,240,255,.55)}
+
+.panel[hidden]{display:none}
+section{padding:96px 0 0;scroll-margin-top:110px}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(2.6rem,5.2vw,4.5rem);line-height:1.02;font-weight:800}
+h2{font-size:clamp(2rem,4vw,3.1rem);line-height:1.08;font-weight:700}
+h3{font-size:1.25rem;line-height:1.3;font-weight:600}
+p{margin:0 0 1em;max-width:66ch}
+.muted{color:var(--muted)}
+.glow-cyan{color:var(--cyan);text-shadow:0 0 24px rgba(0,240,255,.55)}
+.kicker{font:600 .9rem var(--body);color:var(--cyan);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:22px;height:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.sec-intro{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:44px}
+.sec-intro p{margin:0;color:var(--muted);font-size:1.05rem}
+
+/* ---------- Hero ---------- */
+.hero{padding:88px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.hero h1 .line2{display:block;background:linear-gradient(90deg,var(--cyan),var(--violet) 55%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(0,240,255,.25))}
+.hero-sub{font-size:1.18rem;color:#c9d1ec;margin:26px 0 30px;max-width:54ch}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.chips li{border:1px solid var(--line);background:var(--bg-2);border-radius:999px;padding:7px 14px;font-size:.88rem;color:#c9d1ec}
+.chips b{color:var(--text);font-weight:600}
+.cta-row{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 .95rem var(--body);text-decoration:none;padding:13px 22px;border-radius:999px;cursor:pointer;border:0}
+.btn-main{background:var(--green);color:#03140b;box-shadow:0 0 26px rgba(0,255,136,.45)}
+.btn-main:hover{box-shadow:0 0 38px rgba(0,255,136,.7)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid #2c3550}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* The wire card: a headline arrives, the model stamps a verdict */
+.wire{background:linear-gradient(180deg,#101528,#0b0f1c);border:1px solid #232c45;border-radius:22px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,240,255,.35),0 0 0 1px rgba(0,240,255,.06) inset}
+.wire-top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.live{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-weight:600}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.wire-dots{display:flex;gap:7px}
+.wire-dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:#2a3350;cursor:pointer}
+.wire-dots button[aria-current="true"]{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.wire-body{padding:24px 22px 20px;min-height:340px;display:flex;flex-direction:column}
+.wire-meta{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+.wire-meta .tk{font-family:var(--mono);color:var(--cyan);font-weight:500}
+.wire-headline{font:600 1.45rem/1.3 var(--display);letter-spacing:-.01em;margin:0 0 22px;min-height:3.9em}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--cyan);vertical-align:-.15em;margin-left:2px;box-shadow:0 0 8px var(--cyan);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;padding-top:18px;border-top:1px dashed #27304a;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.verdict.show{opacity:1;transform:none}
+.stamp{font:800 1.05rem var(--display);letter-spacing:.06em;padding:7px 14px;border-radius:10px;border:2px solid currentColor}
+.stamp.yes{color:var(--green);box-shadow:0 0 18px rgba(0,255,136,.45),inset 0 0 12px rgba(0,255,136,.25)}
+.stamp.no{color:var(--pink);box-shadow:0 0 18px rgba(255,46,136,.45),inset 0 0 12px rgba(255,46,136,.25)}
+.verdict p{margin:0;font-size:.93rem;color:var(--muted)}
+.verdict .why{color:var(--text);font-size:1rem;margin-bottom:6px}
+.outcome{margin-top:auto;padding-top:18px;font-size:.9rem;color:#c9d1ec;display:flex;gap:10px;align-items:baseline;opacity:0;transition:opacity .35s .15s}
+.outcome.show{opacity:1}
+.tag{display:inline-block;font:600 .76rem var(--body);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.tag.good{color:var(--green);background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.35)}
+.tag.bad{color:var(--pink);background:rgba(255,46,136,.12);border:1px solid rgba(255,46,136,.35)}
+.wire-foot{padding:11px 20px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+
+/* Ticker band, like a market tape */
+.tape{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2);overflow:hidden;margin-top:56px}
+.tape-track{display:flex;gap:48px;padding:14px 0;width:max-content;animation:scroll 42s linear infinite}
+.tape:hover .tape-track{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.tape-item{display:flex;gap:10px;align-items:baseline;white-space:nowrap;font-size:.92rem;color:var(--muted)}
+.tape-item b{font-family:var(--mono);font-weight:500;color:var(--text)}
+.up{color:var(--green)}
+.down{color:var(--pink)}
+
+/* ---------- Big stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card)}
+.stat{padding:30px 26px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat .big{font:800 clamp(2.2rem,4vw,3.2rem)/1 var(--display);letter-spacing:-.03em;margin-bottom:12px}
+.stat p{margin:0;font-size:.92rem;color:var(--muted)}
+.c-cyan{color:var(--cyan);text-shadow:0 0 22px rgba(0,240,255,.5)}
+.c-green{color:var(--green);text-shadow:0 0 22px rgba(0,255,136,.5)}
+.c-pink{color:var(--pink);text-shadow:0 0 22px rgba(255,46,136,.5)}
+.c-violet{color:var(--violet);text-shadow:0 0 22px rgba(168,85,255,.55)}
+
+/* ---------- Charts ---------- */
+.charts{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:22px}
+.chart{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 24px 18px}
+.chart h3{margin-bottom:6px}
+.chart .cap{font-size:.9rem;color:var(--muted);margin:0 0 16px}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart svg text{font-family:var(--body);font-size:12px;fill:#c9d1ec}
+.chart svg .axis{fill:var(--muted)}
+.src{font-size:.8rem;color:#6c7594;margin:10px 0 0}
+
+/* ---------- Extensions ---------- */
+.ext-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.ext{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px 28px 28px;overflow:hidden}
+.ext::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan));box-shadow:0 0 16px var(--accent,var(--cyan))}
+.ext h3{margin-bottom:10px}
+.ext p{color:#c3cbe6;font-size:.98rem;margin:0}
+.ext .tests{display:inline-block;margin-top:16px;font:500 .82rem var(--mono);color:var(--accent,var(--cyan))}
+
+/* ---------- Pipeline ---------- */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative;margin-bottom:26px}
+.pipe::before{content:"";position:absolute;top:21px;left:8%;right:8%;height:2px;background:linear-gradient(90deg,var(--green) 0 12%,var(--amber) 12% 47%,#2a3350 47%)}
+.pnode{position:relative;text-align:center;padding:0 8px}
+.pnode .ball{width:44px;height:44px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font:700 .95rem var(--display);background:var(--bg);border:2px solid #2f3a58;color:var(--muted);position:relative;z-index:1}
+.pnode.done .ball{border-color:var(--green);color:var(--green);box-shadow:0 0 16px rgba(0,255,136,.5)}
+.pnode.run .ball{border-color:var(--amber);color:var(--amber);box-shadow:0 0 16px rgba(255,200,61,.5)}
+.pnode h3{font-size:1rem;margin-bottom:6px}
+.pnode p{font-size:.84rem;color:var(--muted);margin:0 auto;max-width:22ch}
+.pnode .when{display:block;font:500 .78rem var(--mono);margin-top:8px}
+.pnode.done .when{color:var(--green)}
+.pnode.run .when{color:var(--amber)}
+.pnode.plan .when{color:#6c7594}
+
+/* ---------- Data table ---------- */
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:15px 20px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:.85rem;background:var(--bg-2)}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text);font-weight:500}
+td{color:#c3cbe6}
+.status{font:600 .78rem var(--body);padding:3px 10px;border-radius:999px}
+.st-done{color:var(--green);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3)}
+.st-run{color:var(--amber);background:rgba(255,200,61,.1);border:1px solid rgba(255,200,61,.3)}
+.st-plan{color:var(--muted);background:rgba(141,151,181,.08);border:1px solid #2a3350}
+
+/* ---------- Quote + prompt ---------- */
+.callout{border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,rgba(0,240,255,.07),rgba(168,85,255,.07));padding:34px 34px 30px;margin-top:22px}
+.callout p{font:600 clamp(1.25rem,2.2vw,1.6rem)/1.4 var(--display);letter-spacing:-.01em;margin:0 0 12px;max-width:none}
+.callout span{color:var(--muted);font-size:.92rem}
+.prompt{font:400 .88rem/1.7 var(--mono);background:#070912;border:1px solid var(--line);border-radius:18px;color:#cfd6f2;padding:24px 26px;white-space:pre-wrap;margin:0}
+.prompt .ph{color:var(--pink)}
+.prompt .k{color:var(--green)}
+
+/* ---------- Terminal shots ---------- */
+.shots{display:grid;gap:22px}
+.shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.shot-bar{display:flex;gap:7px;padding:12px 16px;background:#141a2c;border-bottom:1px solid var(--line)}
+.shot-bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.shot-bar i:nth-child(2){background:#febc2e}
+.shot-bar i:nth-child(3){background:#28c840}
+.shot button{display:block;width:100%;padding:0;border:0;background:#1f2329;cursor:zoom-in}
+.shot img{width:100%;max-height:330px;object-fit:cover;object-position:top left}
+.shot img.whole{max-height:none}
+.shot figcaption{padding:16px 22px 20px;color:#c3cbe6;font-size:.95rem}
+.shot figcaption b{display:block;color:var(--text);font:600 1.02rem var(--display);margin-bottom:4px}
+dialog.zoom{border:0;padding:0;max-width:min(96vw,1500px);background:transparent}
+dialog.zoom::backdrop{background:rgba(2,3,8,.9)}
+dialog.zoom img{max-height:86vh;width:auto;margin:auto;border-radius:12px}
+dialog.zoom form{text-align:right}
+dialog.zoom button{font:600 .9rem var(--body);background:var(--cyan);color:#04121a;border:0;border-radius:999px;padding:8px 16px;margin:0 0 10px;cursor:pointer}
+
+/* ---------- Team ---------- */
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.member{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 .9rem var(--display);color:#04121a;background:linear-gradient(135deg,var(--cyan),var(--violet))}
+.member:nth-child(3n+2) .avatar{background:linear-gradient(135deg,var(--green),var(--cyan))}
+.member:nth-child(3n+3) .avatar{background:linear-gradient(135deg,var(--pink),var(--violet))}
+.member span{font-weight:500;line-height:1.3}
+
+/* ---------- PDF tabs ---------- */
+.pdf-head{padding:76px 0 34px}
+.pdf-head h1{font-size:clamp(2.4rem,5vw,4rem)}
+.pdf-head p{color:#c9d1ec;font-size:1.12rem;margin-top:18px}
+.viewer{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;aspect-ratio:16/10;box-shadow:0 30px 80px -40px rgba(0,240,255,.4)}
+.viewer iframe{width:100%;height:100%;border:0;background:#fff}
+.soon{position:relative;border:1px solid var(--line);border-radius:22px;background:var(--card);padding:56px 40px;overflow:hidden;text-align:center}
+.soon::before{content:"";position:absolute;inset:-40% -20% auto;height:360px;background:radial-gradient(closest-side,rgba(0,240,255,.16),transparent);pointer-events:none}
+.soon h2{position:relative}
+.soon p{position:relative;color:var(--muted);margin:14px auto 0;max-width:56ch}
+.count{position:relative;display:flex;justify-content:center;gap:16px;margin:34px 0 8px;flex-wrap:wrap}
+.count div{min-width:116px;background:var(--bg-2);border:1px solid var(--line);border-radius:18px;padding:18px 10px 14px}
+.count span{display:block;font:800 3rem/1 var(--display);color:var(--cyan);text-shadow:0 0 24px rgba(0,240,255,.6);font-variant-numeric:tabular-nums}
+.count small{color:var(--muted);font-size:.86rem}
+.toc{list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.toc li{display:flex;gap:14px;align-items:baseline;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.toc .n{font:700 .95rem var(--mono);color:var(--cyan);min-width:1.6em}
+.toc b{font-weight:600}
+.toc .d{display:block;color:var(--muted);font-size:.9rem}
+
+footer{margin-top:110px;border-top:1px solid var(--line);padding:34px 0 40px;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:var(--text)}
+
+@media (max-width:980px){
+  .hero,.sec-intro,.charts{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .pipe{grid-template-columns:repeat(3,1fr);row-gap:30px}
+  .pipe::before{display:none}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 18px}
+  .topbar .wrap{flex-direction:column;align-items:stretch;padding-top:10px;padding-bottom:10px;gap:10px}
+  .tabs{justify-content:space-between}
+  .tab{padding:8px 12px;flex:1}
+  section{padding-top:72px}
+  .hero{padding-top:48px}
+  .ext-grid,.toc{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:0;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:0}
+  .pipe{grid-template-columns:1fr 1fr}
+  .wire-headline{font-size:1.25rem}
+  .soon{padding:40px 20px}
+  .count div{min-width:90px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .tape-track,.live::before,.caret{animation:none}
+  .verdict,.outcome,.tab{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#overview" id="logoLink">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
+      </span>
+      <span>LLM News Alpha<small>Group 5 &nbsp;|&nbsp; MGT 6078, Georgia Tech</small></span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Site sections">
+      <button class="tab" role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
+      <button class="tab" role="tab" id="tab-slides" aria-controls="panel-slides" aria-selected="false" tabindex="-1">Slides</button>
+      <button class="tab" role="tab" id="tab-report" aria-controls="panel-report" aria-selected="false" tabindex="-1">Report (PDF)</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ======================= OVERVIEW ======================= -->
+<div class="panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="kicker">MGT 6078 Final Project, Fall 2026</div>
+        <h1>Can ChatGPT still beat the market?<span class="line2">We're testing it.</span></h1>
+        <p class="hero-sub">So, in 2023 two finance professors showed that just asking GPT-4 "is this headline good or bad for the stock?" predicted next-day returns. In my opinion, the more interesting question is what happened after everyone read that paper and started using LLMs too. That's what we're finding out.</p>
+        <ul class="chips">
+          <li><b>Paper</b> Lopez-Lira &amp; Tang (2024)</li>
+          <li><b>Data budget</b> $0</li>
+          <li><b>Report</b> Dec 15, 2026</li>
+        </ul>
+        <div class="cta-row">
+          <button class="btn btn-main" type="button" data-goto="slides">View our slides</button>
+          <a class="btn btn-ghost" href="#plan">See the plan</a>
+        </div>
+      </div>
+
+      <figure class="wire" style="margin:0" aria-label="How a headline becomes a trading signal">
+        <div class="wire-top"><span class="live">Headline in</span><span class="wire-dots" id="wireDots"></span></div>
+        <div class="wire-body" aria-live="polite">
+          <div class="wire-meta" id="wireMeta"></div>
+          <p class="wire-headline" id="wireHeadline"></p>
+          <div class="verdict" id="wireVerdict">
+            <span class="stamp" id="wireStamp"></span>
+            <div><p class="why" id="wireWhy"></p><p id="wireNote"></p></div>
+          </div>
+          <div class="outcome" id="wireOutcome"></div>
+        </div>
+        <figcaption class="wire-foot">Real examples from Lopez-Lira &amp; Tang (2024): their Humana case and two topics from their interpretability results.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="tape" aria-label="Key numbers from the original paper">
+    <div class="tape-track" id="tapeTrack"></div>
+  </div>
+
+  <div class="wrap">
+    <!-- What the paper found -->
+    <section aria-labelledby="h-paper">
+      <div class="sec-intro">
+        <div><div class="kicker">The paper we're extending</div><h2 id="h-paper">What Lopez-Lira &amp; Tang found</h2></div>
+        <p>They fed 134,129 headlines (Oct 2021 to Dec 2023, 4,106 U.S. firms) to GPT-4 with one simple prompt, then traded on the answers. Honestly, the results surprised me.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="big c-green">38 bps</div><p>Average daily return going long good news and short bad news, before costs.</p></div>
+        <div class="stat"><div class="big c-cyan">3.28</div><p>Annualized Sharpe ratio. The CAPM and five-factor alphas are basically the same size.</p></div>
+        <div class="stat"><div class="big c-pink">3×</div><p>The short side earned about three times the long side. Bad news sinks in slowly.</p></div>
+        <div class="stat"><div class="big c-violet">20 bps</div><p>The round-trip trading cost where the whole strategy stops making money.</p></div>
+      </div>
+      <div class="charts">
+        <div class="chart">
+          <h3>Bigger models, better predictions</h3>
+          <p class="cap">Sharpe ratio by language model. The small ones actually lose money, and that "threshold" is exactly what the paper's theory predicts.</p>
+          <svg id="ladderChart" role="img" aria-labelledby="ladT ladD"><title id="ladT">Sharpe ratio by language model</title><desc id="ladD">GPT-4 3.28, DistilBart-MNLI 1.61, GPT-3.5 1.49, RavenPack 1.39, BART-Large 1.24, BERT-Large 1.12, GPT-1 -0.31, GPT-2 -0.31, FinBERT -0.43, BERT -0.61, GPT-2-Large -0.93.</desc></svg>
+          <p class="src">Source: Lopez-Lira &amp; Tang (2024), Table 4.</p>
+        </div>
+        <div class="chart">
+          <h3>But the edge is fading</h3>
+          <p class="cap">Sharpe ratio by period, while ChatGPT adoption exploded. This chart is why our project exists.</p>
+          <svg id="decayChart" role="img" aria-labelledby="decT decD"><title id="decT">Sharpe ratio by period</title><desc id="decD">2021 Q4 6.54, 2022 3.68, 2023 2.33.</desc></svg>
+          <p class="src">Source: Lopez-Lira &amp; Tang (2024), Figure 11.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- What we add -->
+    <section aria-labelledby="h-add">
+      <div class="sec-intro">
+        <div><div class="kicker">Our contribution</div><h2 id="h-add">What we're adding</h2></div>
+        <p>We didn't want to just re-run the paper. Each extension below answers a question the authors left open, and each one ties back to their own theory.</p>
+      </div>
+      <div class="ext-grid">
+        <div class="ext" style="--accent:var(--cyan)"><h3>A fresh test, after publication</h3><p>We score 2026 headlines the paper never saw, using models trained before that news existed. If the market learned from the paper, the alpha should be smaller now.</p><span class="tests">tests Theorem 2: market efficiency</span></div>
+        <div class="ext" style="--accent:var(--green)"><h3>A clean model-size ladder</h3><p>The paper compares models from different companies. We use one family, Gemma 3, at 1B, 4B and 12B parameters, so the only thing that changes is size.</p><span class="tests">tests Theorem 1: the size threshold</span></div>
+        <div class="ext" style="--accent:var(--violet)"><h3>Signal decay and real costs</h3><p>How fast does the signal die, and can you actually trade it? We measure the information coefficient at each horizon and solve for the break-even trading cost.</p><span class="tests">turns a backtest into a trading question</span></div>
+        <div class="ext" style="--accent:var(--pink)"><h3>Risk, or real information?</h3><p>We check whether the alpha survives FF3, FF5 and q-factors plus momentum and reversal, split the sample at ChatGPT's launch, and test whether the score predicts the next earnings surprise.</p><span class="tests">every robustness check in our guideline</span></div>
+      </div>
+      <div class="callout">
+        <p>"Honestly, the hardest part wasn't the model. It was building a dataset where every headline only counts from the moment a real investor could have traded on it."</p>
+        <span>Anay, on the data stage</span>
+      </div>
+    </section>
+
+    <!-- Pipeline -->
+    <section id="plan" aria-labelledby="h-plan">
+      <div class="sec-intro">
+        <div><div class="kicker">Where we are</div><h2 id="h-plan">The pipeline</h2></div>
+        <p>Every step saves a file the next step reads, so any number in our report can be rebuilt from scratch. Status as of November 19, 2026.</p>
+      </div>
+      <div class="pipe">
+        <div class="pnode done"><div class="ball">1</div><h3>Factors</h3><p>FF3, FF5, momentum, reversal, q5, VIX</p><span class="when">done</span></div>
+        <div class="pnode run"><div class="ball">2</div><h3>News</h3><p>2026 done (289,217 headlines); 2021–23 next</p><span class="when">in progress</span></div>
+        <div class="pnode run"><div class="ball">3</div><h3>Prices</h3><p>2026 done (6,030 tickers, 1M+ stock-days); 2021–23 next</p><span class="when">in progress</span></div>
+        <div class="pnode plan"><div class="ball">4</div><h3>LLM scoring</h3><p>Gemma 3 1B, 4B, 12B on Colab</p><span class="when">week of Nov 23</span></div>
+        <div class="pnode plan"><div class="ball">5</div><h3>Backtest</h3><p>Portfolios, regressions, IC, alphas, costs</p><span class="when">by Dec 1</span></div>
+        <div class="pnode plan"><div class="ball">6</div><h3>Report</h3><p>Robustness checks and write-up</p><span class="when">Dec 15</span></div>
+      </div>
+    </section>
+
+    <!-- Data -->
+    <section aria-labelledby="h-data">
+      <div class="sec-intro">
+        <div><div class="kicker">Built for $0</div><h2 id="h-data">Our data</h2></div>
+        <p>In my opinion, a project like this should be reproducible by anyone, so we only used free sources. All the download scripts are in this repo.</p>
+      </div>
+      <div class="tbl"><div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Dataset</th><th>Source</th><th>Coverage</th><th>What it's for</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>News headlines</td><td>Alpaca News API</td><td>Apr–Nov 2026</td><td>Fresh post-publication test</td><td><span class="status st-done">Done</span></td></tr>
+            <tr><td>News headlines</td><td>FNSPID (Nasdaq file)</td><td>Oct 2021–Dec 2023</td><td>Replicating the paper</td><td><span class="status st-run">Downloading</span></td></tr>
+            <tr><td>Daily prices</td><td>Alpaca Market Data (SIP feed)</td><td>Mar–Nov 2026: 6,030 tickers</td><td>Returns, liquidity, shorting</td><td><span class="status st-done">Done (2026)</span></td></tr>
+            <tr><td>FF3, FF5, momentum, reversal</td><td>Ken French Data Library</td><td>to Sep 2026</td><td>Factor-adjusted alpha</td><td><span class="status st-done">Done</span></td></tr>
+            <tr><td>q5 factors</td><td>global-q.org</td><td>to Dec 2025</td><td>q-factor alpha</td><td><span class="status st-done">Done</span></td></tr>
+            <tr><td>VIX</td><td>FRED</td><td>to Nov 18, 2026</td><td>Calm vs. stressed markets</td><td><span class="status st-done">Done</span></td></tr>
+            <tr><td>Earnings and shares</td><td>SEC EDGAR</td><td>Both windows</td><td>Earnings surprises, firm size</td><td><span class="status st-plan">Planned</span></td></tr>
+            <tr><td>LLM scores</td><td>Gemma 3 on Google Colab</td><td>Both windows</td><td>The trading signal</td><td><span class="status st-plan">Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- Prompt -->
+    <section aria-labelledby="h-prompt">
+      <div class="sec-intro">
+        <div><div class="kicker">Same question, every headline</div><h2 id="h-prompt">The exact prompt</h2></div>
+        <p>We're using the paper's prompt word for word. So, if our results differ, it's because of the data or the model, not because we asked differently.</p>
+      </div>
+      <pre class="prompt">Forget all your previous instructions. Pretend you are a financial expert. You are a financial expert with stock recommendation experience. Answer <span class="k">"YES"</span> if good news, <span class="k">"NO"</span> if bad news, or <span class="k">"UNKNOWN"</span> if uncertain in the first line. Then elaborate with one short and concise sentence on the next line. Is this headline good or bad for the stock price of <span class="ph">{company_name}</span> in the short term?
+Headline: <span class="ph">{headline}</span></pre>
+      <p class="src">YES = +1, UNKNOWN = 0, NO = −1. Temperature 0, so every run gives the same answer.</p>
+    </section>
+
+    <!-- Terminal -->
+    <section aria-labelledby="h-term">
+      <div class="sec-intro">
+        <div><div class="kicker">Straight from my terminal</div><h2 id="h-term">Behind the scenes</h2></div>
+        <p>A few real runs from the data stage. Click any screenshot to see it full size.</p>
+      </div>
+      <div class="shots">
+        <figure class="shot"><div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" data-zoom="assets/img/alpaca-history-probe.png" aria-label="Enlarge the news history test"><img src="assets/img/alpaca-history-probe.png" alt="Terminal test of one day per month: 50 articles on dates from July to November 2026, zero in April 2026 and earlier." loading="lazy"></button><figcaption><b>How far back does the free news go?</b>Before committing to a data source, I tested one day per month. Full coverage from mid-2026, nothing before. So, 2026 became our fresh out-of-sample window.</figcaption></figure>
+        <figure class="shot"><div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" data-zoom="assets/img/news-download.png" aria-label="Enlarge the news download"><img class="whole" src="assets/img/news-download.png" alt="Terminal output of the full 2026 news download: 289,217 articles from April to November 2026, saved month by month." loading="lazy"></button><figcaption><b>289,217 headlines, April to November 2026</b>That's already more than twice the paper's 134,129. The download saves month by month, so if the Wi-Fi drops, nothing is lost.</figcaption></figure>
+        <figure class="shot"><div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" data-zoom="assets/img/price-download.png" aria-label="Enlarge the price download"><img class="whole" src="assets/img/price-download.png" alt="Terminal output of the 2026 price download: feed used sip, 6,030 tickers, 1,014,623 ticker-days from March 16 to November 18, 2026." loading="lazy"></button><figcaption><b>6,030 stocks, over a million stock-days</b>Daily prices for every ticker in our 2026 news, from the consolidated SIP feed, so the open and close prices are the official ones and not a single exchange's.</figcaption></figure>
+        <figure class="shot"><div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" data-zoom="assets/img/factor-download.png" aria-label="Enlarge the factor download"><img src="assets/img/factor-download.png" alt="Terminal output listing FF3, FF5, momentum, reversal, q5 factors and VIX with date ranges." loading="lazy"></button><figcaption><b>Every benchmark in one file</b>Six factor and volatility series, merged into one daily table we can run every alpha test on.</figcaption></figure>
+        <figure class="shot"><div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" data-zoom="assets/img/fnspid-coverage-check.png" aria-label="Enlarge the FNSPID coverage check"><img src="assets/img/fnspid-coverage-check.png" alt="Terminal output scanning 13,057,514 rows by year: the file ends in 2020." loading="lazy"></button><figcaption><b>Never trust a dataset you haven't checked</b>I scanned all 13 million rows of one FNSPID file. It stops in 2020, so we switched to its 23 GB Nasdaq file for 2021–23.</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section aria-labelledby="h-team">
+      <div class="sec-intro">
+        <div><div class="kicker">Group 5</div><h2 id="h-team">The team</h2></div>
+        <p>Seven of us, one question. Listed alphabetically by last name.</p>
+      </div>
+      <div class="team" id="teamGrid"></div>
+    </section>
+  </div>
+</div>
+
+<!-- ======================= SLIDES ======================= -->
+<div class="panel" id="panel-slides" role="tabpanel" aria-labelledby="tab-slides" hidden>
+  <div class="wrap">
+    <div class="pdf-head">
+      <div class="kicker">Presented November 19, 2026</div>
+      <h1>Our presentation</h1>
+      <p>Twelve minutes on the paper, what I think it gets right and wrong, and how we're extending it.</p>
+    </div>
+    <!-- So, to publish: export the deck as PDF and upload it as slides/MGT6078_Group5_Presentation.pdf -->
+    <div id="slidesHolder">
+      <div class="soon">
+        <h2>The slides are on their way</h2>
+        <p>We're uploading the deck from our November 19 presentation. Until then, the Overview tab covers the same story.</p>
+        <div class="cta-row" style="justify-content:center;position:relative"><button class="btn btn-ghost" type="button" data-goto="overview">Back to the overview</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= REPORT ======================= -->
+<div class="panel" id="panel-report" role="tabpanel" aria-labelledby="tab-report" hidden>
+  <div class="wrap">
+    <div class="pdf-head">
+      <div class="kicker">Final report</div>
+      <h1>Coming December 15</h1>
+      <p>Finally, all the results in one place: the replication, the 2026 test, the model-size ladder, and every robustness check. Around 15 pages, with our full code in the appendix.</p>
+    </div>
+    <!-- So, to publish: upload the final PDF as report/MGT6078_Group5_Final_Report.pdf -->
+    <div id="reportHolder">
+      <div class="soon">
+        <h2>Dropping before the deadline</h2>
+        <p>Due Tuesday, December 15, 2026 at noon Eastern. The PDF will open right here.</p>
+        <div class="count" aria-live="off">
+          <div><span id="cdDays">–</span><small>days</small></div>
+          <div><span id="cdHours">–</span><small>hours</small></div>
+          <div><span id="cdMins">–</span><small>minutes</small></div>
+        </div>
+      </div>
+      <ol class="toc">
+        <li><span class="n">01</span><span><b>Introduction</b><span class="d">What the paper found and exactly how we extend it</span></span></li>
+        <li><span class="n">02</span><span><b>Literature</b><span class="d">LLMs in finance, textual analysis, underreaction</span></span></li>
+        <li><span class="n">03</span><span><b>Data</b><span class="d">Sources, cleaning, timestamps, summary statistics</span></span></li>
+        <li><span class="n">04</span><span><b>Method</b><span class="d">Scoring, portfolios, regressions, IC, factor models</span></span></li>
+        <li><span class="n">05</span><span><b>Results</b><span class="d">Replication, 2026 test, model-size ladder</span></span></li>
+        <li><span class="n">06</span><span><b>Robustness</b><span class="d">Subsamples, factors, cash-flow news, frequency</span></span></li>
+        <li><span class="n">07</span><span><b>Conclusion</b><span class="d">What we learned and what we'd do differently</span></span></li>
+        <li><span class="n">A</span><span><b>Appendix</b><span class="d">Full code and extra tables</span></span></li>
+      </ol>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Group 5, MGT 6078 Finance and Investments, Georgia Institute of Technology, Fall 2026.</span>
+    <span>Based on <a href="https://arxiv.org/abs/2304.07619">Lopez-Lira &amp; Tang (2024)</a>. Educational project, not investment advice.</span>
+  </div>
+</footer>
+
+<dialog class="zoom" id="zoom"><form method="dialog"><button>Close</button></form><img id="zoomImg" alt=""></dialog>
+
+<script>
+// So, first the tabs: each one has its own link (#overview, #slides, #report)
+(function(){
+  const tabButtons = Array.from(document.querySelectorAll('.tab'));
+  const tabNames = tabButtons.map(btn => btn.getAttribute('aria-controls').replace('panel-',''));
+
+  function openTab(wantedName, moveFocus){
+    if(!tabNames.includes(wantedName)) wantedName = 'overview';
+    tabButtons.forEach(btn => {
+      const isActive = btn.getAttribute('aria-controls') === 'panel-' + wantedName;
+      btn.setAttribute('aria-selected', isActive);
+      btn.tabIndex = isActive ? 0 : -1;
+      if(isActive && moveFocus) btn.focus();
+    });
+    tabNames.forEach(name => { document.getElementById('panel-' + name).hidden = (name !== wantedName); });
+    if(location.hash !== '#' + wantedName) history.replaceState(null, '', '#' + wantedName);
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+
+  tabButtons.forEach((btn, idx) => {
+    btn.addEventListener('click', () => openTab(tabNames[idx]));
+    btn.addEventListener('keydown', evt => {
+      let jumpTo = null;
+      if(evt.key === 'ArrowRight') jumpTo = (idx + 1) % tabButtons.length;
+      if(evt.key === 'ArrowLeft') jumpTo = (idx - 1 + tabButtons.length) % tabButtons.length;
+      if(jumpTo !== null){ evt.preventDefault(); openTab(tabNames[jumpTo], true); }
+    });
+  });
+  document.querySelectorAll('[data-goto]').forEach(goButton => goButton.addEventListener('click', () => openTab(goButton.dataset.goto)));
+  document.getElementById('logoLink').addEventListener('click', evt => { evt.preventDefault(); openTab('overview'); });
+  window.addEventListener('hashchange', () => { const hashName = location.hash.slice(1); if(tabNames.includes(hashName)) openTab(hashName); });
+  const startName = location.hash.slice(1);
+  openTab(tabNames.includes(startName) ? startName : 'overview');
+})();
+
+// let's do now the team list, sorted by last name like our report cover page
+(function(){
+  const groupFive = ['Eriore Adeoluwa','Immanuella Akumabor','Himanshu Bhatt','Dikshita Chalke','Adeola H Fasola','Anay Abhijit Joshi','Qianye Lin'];
+  const teamGrid = document.getElementById('teamGrid');
+  groupFive.forEach(fullName => {
+    const nameParts = fullName.split(' ');
+    const initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    const memberCard = document.createElement('div');
+    memberCard.className = 'member';
+    memberCard.innerHTML = '<span class="avatar" aria-hidden="true">' + initials + '</span><span>' + fullName + '</span>';
+    teamGrid.appendChild(memberCard);
+  });
+})();
+
+// So, the market tape with the paper's headline numbers
+(function(){
+  const tapeFacts = [
+    ['Long-short Sharpe','3.28','up'], ['Daily return','+38 bps','up'], ['Short leg','+29 bps/day','up'],
+    ['Long leg','+9 bps/day','up'], ['Sharpe 2021 Q4','6.54','up'], ['Sharpe 2023','2.33','down'],
+    ['Max drawdown','−17.4%','down'], ['GPT-2 Sharpe','−0.31','down'], ['Headlines scored','134,129',''],
+    ['Firms','4,106',''], ['Price absorbs news in','2 days',''], ['Break-even cost','~20 bps','down']
+  ];
+  const tapeTrack = document.getElementById('tapeTrack');
+  const oneRound = tapeFacts.map(([label, value, tone]) =>
+    '<span class="tape-item">' + label + ' <b class="' + tone + '">' + value + '</b></span>').join('');
+  tapeTrack.innerHTML = oneRound + oneRound;
+  tapeTrack.children.length && Array.from(tapeTrack.children).slice(tapeFacts.length).forEach(copy => copy.setAttribute('aria-hidden','true'));
+})();
+
+// let's do now the headline card: type it in, then stamp the verdict
+(function(){
+  const wireItems = [
+    { meta:'Dec 2023, scored for <span class="tk">HUM</span> Humana',
+      headline:'Cigna Calls Off Humana Pursuit, Plans Big Stock Buyback',
+      stamp:'NO', tone:'no',
+      why:'GPT-4: "a loss of a potential acquisition premium."',
+      note:'RavenPack\'s sentiment engine scored the same headline +0.65, positive.',
+      outcome:'<span class="tag good">Context wins</span><span>GPT-4 read the deal from Humana\'s side, not Cigna\'s.</span>' },
+    { meta:'Share buyback headlines, e.g. <span class="tk">GPAK</span>',
+      headline:'Gamer Pakistan Announces Share Repurchase Program',
+      stamp:'YES', tone:'yes',
+      why:'Buybacks read as management confidence.',
+      note:'GPT-4 rated this whole topic strongly positive.',
+      outcome:'<span class="tag good">Called it</span><span>Buyback predictions beat the baseline by about 1.1 percentage points.</span>' },
+    { meta:'Convertible note headlines, e.g. <span class="tk">EGHT</span>',
+      headline:'8x8, Inc. Prices $137.5 Million of Convertible Senior Notes',
+      stamp:'YES', tone:'yes',
+      why:'New money reads as funding for growth.',
+      note:'GPT-4 rated this whole topic positive.',
+      outcome:'<span class="tag bad">Missed</span><span>These stocks tended to drop instead, about 0.5 points worse.</span>' }
+  ];
+  const metaEl = document.getElementById('wireMeta'), headlineEl = document.getElementById('wireHeadline');
+  const verdictEl = document.getElementById('wireVerdict'), stampEl = document.getElementById('wireStamp');
+  const whyEl = document.getElementById('wireWhy'), noteEl = document.getElementById('wireNote');
+  const outcomeEl = document.getElementById('wireOutcome'), dotsEl = document.getElementById('wireDots');
+  const wireBox = document.querySelector('.wire');
+  const calmMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let currentSlot = 0, typingTimer = null, cycleTimer = null, readerPaused = false;
+
+  wireItems.forEach((item, idx) => {
+    const dotButton = document.createElement('button');
+    dotButton.type = 'button';
+    dotButton.setAttribute('aria-label', 'Show example ' + (idx + 1));
+    dotButton.addEventListener('click', () => showItem(idx, true));
+    dotsEl.appendChild(dotButton);
+  });
+
+  function revealVerdict(item){
+    stampEl.textContent = item.stamp; stampEl.className = 'stamp ' + item.tone;
+    whyEl.textContent = item.why; noteEl.textContent = item.note; outcomeEl.innerHTML = item.outcome;
+    verdictEl.classList.add('show'); outcomeEl.classList.add('show');
+  }
+  function scheduleNext(){
+    clearTimeout(cycleTimer);
+    if(calmMotion || readerPaused) return;
+    cycleTimer = setTimeout(() => showItem((currentSlot + 1) % wireItems.length), 6500);
+  }
+  function showItem(idx, instant){
+    clearTimeout(typingTimer); clearTimeout(cycleTimer);
+    currentSlot = idx;
+    const item = wireItems[idx];
+    Array.from(dotsEl.children).forEach((dot, dotIdx) => dot.setAttribute('aria-current', dotIdx === idx));
+    metaEl.innerHTML = item.meta;
+    verdictEl.classList.remove('show'); outcomeEl.classList.remove('show');
+    if(calmMotion || instant){ headlineEl.textContent = item.headline; revealVerdict(item); scheduleNext(); return; }
+    let typedCount = 0;
+    (function typeNext(){
+      typedCount++;
+      headlineEl.innerHTML = item.headline.slice(0, typedCount).replace(/&/g,'&amp;').replace(/</g,'&lt;') + '<span class="caret"></span>';
+      if(typedCount < item.headline.length) typingTimer = setTimeout(typeNext, 26);
+      else typingTimer = setTimeout(() => { headlineEl.textContent = item.headline; revealVerdict(item); scheduleNext(); }, 450);
+    })();
+  }
+  // In my opinion, nothing should move while someone is reading it
+  wireBox.addEventListener('mouseenter', () => { readerPaused = true; clearTimeout(cycleTimer); });
+  wireBox.addEventListener('mouseleave', () => { readerPaused = false; if(verdictEl.classList.contains('show')) scheduleNext(); });
+  wireBox.addEventListener('focusin', () => { readerPaused = true; clearTimeout(cycleTimer); });
+  wireBox.addEventListener('focusout', () => { readerPaused = false; scheduleNext(); });
+  showItem(0, false);
+})();
+
+// So, both charts are drawn from the paper's numbers, in neon
+(function(){
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const make = (tag, attrs, text) => { const el = document.createElementNS(svgNS, tag); Object.entries(attrs).forEach(([key, val]) => el.setAttribute(key, val)); if(text !== undefined) el.textContent = text; return el; };
+  function addGlow(svgEl, glowId, glowColor){
+    const defs = make('defs', {});
+    const filterEl = make('filter', {id:glowId, x:'-30%', y:'-60%', width:'160%', height:'220%'});
+    filterEl.appendChild(make('feGaussianBlur', {stdDeviation:'3.2', result:'blurred'}));
+    const mergeEl = make('feMerge', {});
+    mergeEl.appendChild(make('feMergeNode', {in:'blurred'})); mergeEl.appendChild(make('feMergeNode', {in:'SourceGraphic'}));
+    filterEl.appendChild(mergeEl); defs.appendChild(filterEl); svgEl.appendChild(defs);
+  }
+
+  const ladderRows = [['GPT-4',3.28],['DistilBart-MNLI',1.61],['GPT-3.5',1.49],['RavenPack',1.39],['BART-Large',1.24],['BERT-Large',1.12],['GPT-1',-0.31],['GPT-2',-0.31],['FinBERT',-0.43],['BERT',-0.61],['GPT-2-Large',-0.93]];
+  const ladderSvg = document.getElementById('ladderChart');
+  const rowGap = 26, nameWidth = 116, svgWidth = 520, plotLeft = nameWidth + 8, plotRight = svgWidth - 46, lowEnd = -1.9, highEnd = 3.6;
+  const toX = val => plotLeft + (val - lowEnd) / (highEnd - lowEnd) * (plotRight - plotLeft);
+  ladderSvg.setAttribute('viewBox', `0 0 ${svgWidth} ${ladderRows.length * rowGap + 30}`);
+  addGlow(ladderSvg, 'glowLadder');
+  [-1,0,1,2,3].forEach(tickVal => {
+    ladderSvg.appendChild(make('line', {x1:toX(tickVal), x2:toX(tickVal), y1:0, y2:ladderRows.length*rowGap, stroke: tickVal === 0 ? '#3a4566' : '#1a2135', 'stroke-width':1}));
+    ladderSvg.appendChild(make('text', {x:toX(tickVal), y:ladderRows.length*rowGap + 20, 'text-anchor':'middle', class:'axis'}, tickVal));
+  });
+  ladderRows.forEach(([modelName, sharpeValue], rowIdx) => {
+    const yTop = rowIdx * rowGap + 5;
+    const barStart = Math.min(toX(0), toX(sharpeValue)), barLength = Math.abs(toX(sharpeValue) - toX(0));
+    const barColor = sharpeValue < 0 ? '#ff2e88' : (modelName === 'GPT-4' ? '#00ff88' : '#00f0ff');
+    ladderSvg.appendChild(make('text', {x:nameWidth, y:yTop + 12, 'text-anchor':'end', 'font-weight': modelName === 'GPT-4' ? 700 : 400}, modelName));
+    ladderSvg.appendChild(make('rect', {x:barStart, y:yTop + 1, width:Math.max(barLength,1), height:rowGap - 11, rx:4, fill:barColor, opacity: modelName === 'GPT-4' || sharpeValue < 0 ? 1 : .55, filter:'url(#glowLadder)'}));
+    const labelX = sharpeValue < 0 ? barStart - 6 : barStart + barLength + 6;
+    ladderSvg.appendChild(make('text', {x:labelX, y:yTop + 12, 'text-anchor': sharpeValue < 0 ? 'end' : 'start', fill:barColor}, sharpeValue.toFixed(2)));
+  });
+
+  const periodRows = [['2021 Q4',6.54],['2022',3.68],['2023',2.33]];
+  const decaySvg = document.getElementById('decayChart');
+  const decayWidth = 420, decayHeight = 250, baseY = 200, topY = 30, leftX = 60, rightX = 380;
+  const pointX = idx => leftX + idx * (rightX - leftX) / 2;
+  const pointY = val => baseY - val / 7 * (baseY - topY);
+  decaySvg.setAttribute('viewBox', `0 0 ${decayWidth} ${decayHeight}`);
+  addGlow(decaySvg, 'glowDecay');
+  const defsEl = decaySvg.querySelector('defs');
+  const fadeFill = make('linearGradient', {id:'decayFill', x1:0, y1:0, x2:0, y2:1});
+  fadeFill.appendChild(make('stop', {offset:'0%', 'stop-color':'#a855ff', 'stop-opacity':.45}));
+  fadeFill.appendChild(make('stop', {offset:'100%', 'stop-color':'#a855ff', 'stop-opacity':0}));
+  defsEl.appendChild(fadeFill);
+  [0,2,4,6].forEach(gridVal => {
+    decaySvg.appendChild(make('line', {x1:leftX - 20, x2:rightX + 20, y1:pointY(gridVal), y2:pointY(gridVal), stroke:'#1a2135'}));
+    decaySvg.appendChild(make('text', {x:leftX - 28, y:pointY(gridVal) + 4, 'text-anchor':'end', class:'axis'}, gridVal));
+  });
+  const linePoints = periodRows.map(([, val], idx) => `${pointX(idx)},${pointY(val)}`).join(' ');
+  decaySvg.appendChild(make('polygon', {points:`${pointX(0)},${baseY} ${linePoints} ${pointX(2)},${baseY}`, fill:'url(#decayFill)'}));
+  decaySvg.appendChild(make('polyline', {points:linePoints, fill:'none', stroke:'#a855ff', 'stroke-width':3.5, 'stroke-linejoin':'round', filter:'url(#glowDecay)'}));
+  periodRows.forEach(([periodName, val], idx) => {
+    decaySvg.appendChild(make('circle', {cx:pointX(idx), cy:pointY(val), r:6, fill:'#05060b', stroke:'#ff2e88', 'stroke-width':3, filter:'url(#glowDecay)'}));
+    decaySvg.appendChild(make('text', {x:pointX(idx), y:pointY(val) - 14, 'text-anchor':'middle', 'font-weight':700, 'font-size':14, fill:'#eef2ff'}, val.toFixed(2)));
+    decaySvg.appendChild(make('text', {x:pointX(idx), y:baseY + 24, 'text-anchor':'middle', class:'axis'}, periodName));
+  });
+})();
+
+// Finally, the PDFs show up automatically once uploaded, plus the countdown and zoom
+(function(){
+  function embedIfPresent(pdfPath, holderId, viewerTitle, buttonText){
+    fetch(pdfPath, {method:'HEAD'}).then(reply => {
+      if(!reply.ok) return;
+      document.getElementById(holderId).innerHTML =
+        '<div class="viewer"><iframe src="' + pdfPath + '" title="' + viewerTitle + '"></iframe></div>' +
+        '<div class="cta-row"><a class="btn btn-main" href="' + pdfPath + '" download>' + buttonText + '</a>' +
+        '<a class="btn btn-ghost" href="' + pdfPath + '" target="_blank" rel="noopener">Open in a new tab</a></div>';
+    }).catch(() => {});
+  }
+  embedIfPresent('slides/MGT6078_Group5_Presentation.pdf', 'slidesHolder', 'Group 5 presentation slides', 'Download the slides');
+  embedIfPresent('report/MGT6078_Group5_Final_Report.pdf', 'reportHolder', 'Group 5 final report', 'Download the report');
+
+  const deadlineMoment = new Date('2026-12-15T12:00:00-05:00');
+  function tickCountdown(){
+    const daysEl = document.getElementById('cdDays');
+    if(!daysEl) return;
+    const minutesLeft = Math.max(0, Math.floor((deadlineMoment - new Date()) / 60000));
+    daysEl.textContent = Math.floor(minutesLeft / 1440);
+    document.getElementById('cdHours').textContent = Math.floor(minutesLeft % 1440 / 60);
+    document.getElementById('cdMins').textContent = minutesLeft % 60;
+  }
+  tickCountdown(); setInterval(tickCountdown, 30000);
+
+  const zoomDialog = document.getElementById('zoom'), zoomImage = document.getElementById('zoomImg');
+  document.querySelectorAll('[data-zoom]').forEach(zoomButton => zoomButton.addEventListener('click', () => {
+    zoomImage.src = zoomButton.dataset.zoom; zoomImage.alt = zoomButton.querySelector('img').alt; zoomDialog.showModal();
+  }));
+  zoomDialog.addEventListener('click', evt => { if(evt.target === zoomDialog) zoomDialog.close(); });
+})();
+</script>
+</body>
+</html>
