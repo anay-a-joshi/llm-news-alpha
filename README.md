@@ -72,3 +72,5 @@ Honestly, the hardest part wasn't the model. It was making sure every headline o
 Anay Abhijit Joshi, Eriore Adeoluwa, Immanuella Akumabor, Himanshu Bhatt, Dikshita Chalke, Adeola H Fasola, Qianye Lin
 
 *Finally, a note: this is an educational research project. Nothing here is investment advice.*
+
+![Profile Views](https://komarev.com/ghpvc/?username=anay-a-joshi&color=green)  
