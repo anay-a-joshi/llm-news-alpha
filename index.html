@@ -636,15 +636,15 @@ Headline: <span class="ph">{headline}</span></pre>
     <div class="pdf-head">
       <div class="kicker">Presented November 19, 2026</div>
       <h1>Our presentation</h1>
-      <p>Twelve minutes on the paper, what I think it gets right and wrong, and how we're extending it.</p>
+      <p>Twelve minutes on the paper, what I think it gets right and wrong, and how we're extending it. The deck below is the live version I presented from.</p>
     </div>
-    <!-- So, to publish: export the deck as PDF and upload it as slides/MGT6078_Group5_Presentation.pdf -->
+    <!-- So, the interactive deck is slides.html; a PDF copy at slides/MGT6078_Group5_Presentation.pdf adds a download button -->
     <div id="slidesHolder">
-      <div class="soon">
-        <h2>The slides are on their way</h2>
-        <p>We're uploading the deck from our November 19 presentation. Until then, the Overview tab covers the same story.</p>
-        <div class="cta-row" style="justify-content:center;position:relative"><button class="btn btn-ghost" type="button" data-goto="overview">Back to the overview</button></div>
+      <div class="viewer" style="aspect-ratio:16/9"><iframe src="slides.html" title="Group 5 presentation slides" allowfullscreen></iframe></div>
+      <div class="cta-row" id="slidesActions">
+        <a class="btn btn-main" href="slides.html" target="_blank" rel="noopener">Open the slides full screen</a>
       </div>
+      <p class="muted" style="margin-top:14px;font-size:.92rem">Use the arrow keys to move between slides, N for speaker notes and F for full screen.</p>
     </div>
   </div>
 </div>
@@ -918,7 +918,12 @@ Headline: <span class="ph">{headline}</span></pre>
         '<a class="btn btn-ghost" href="' + pdfPath + '" target="_blank" rel="noopener">Open in a new tab</a></div>';
     }).catch(() => {});
   }
-  embedIfPresent('slides/MGT6078_Group5_Presentation.pdf', 'slidesHolder', 'Group 5 presentation slides', 'Download the slides');
+  // So, the slides are always live as HTML; the PDF only adds a download button when it exists
+  fetch('slides/MGT6078_Group5_Presentation.pdf', {method:'HEAD'}).then(reply => {
+    if(!reply.ok) return;
+    document.getElementById('slidesActions').insertAdjacentHTML('beforeend',
+      '<a class="btn btn-ghost" href="slides/MGT6078_Group5_Presentation.pdf" download>Download the PDF</a>');
+  }).catch(() => {});
   embedIfPresent('report/MGT6078_Group5_Final_Report.pdf', 'reportHolder', 'Group 5 final report', 'Download the report');
 
   const deadlineMoment = new Date('2026-12-15T12:00:00-05:00');
